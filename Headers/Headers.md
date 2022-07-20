@@ -17,7 +17,7 @@ Within the Artificer NFA standards there is a subset of headers which are includ
     * Audio
     * Application
 * iconURLHdr
-  * URL to the icon representing this asset
+  * URL to the icon representing this asset. This image is of size 100x100.
 
 
 Copyright 2022 Civilware. All rights reserved.

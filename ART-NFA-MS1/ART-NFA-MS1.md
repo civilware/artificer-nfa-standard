@@ -41,7 +41,7 @@ Function InitializePrivate() Uint64
     340 STORE("nameHdr", "<nameHdr>") // This defines the name of the NFA, following the headers variable standard.
     350 STORE("descrHdr", "<descrHdr>") // This defines the description of the NFA, following the headers variable standard.
     360 STORE("typeHdr", "<typeHdr>") // This defines the type of the NFA, following the headers variable standard.
-    370 STORE("iconURLHdr", "<iconURLHdr>") // This defines the url for the icon representing the NFA, following the headers variable standard.
+    370 STORE("iconURLHdr", "<iconURLHdr>") // This defines the url for the icon representing the NFA, following the headers variable standard. This should be of size 100x100.
     400 STORE("fileCheckC", "<fileCheckC>") // This defines the file signature 'C' header within the .sign file generated from the owner.
     410 STORE("fileCheckS", "<fileCheckS>") // This defines the file signature 'S' header within the .sign file generated from the owner.
     420 STORE("fileURL", "<fileURL>") // This defines the url for the file which this NFA is minting. This can be hosted anywhere the creator desires and is updateable by creator and/or owner depending on setting of ownerCanUpdate (0/1).
