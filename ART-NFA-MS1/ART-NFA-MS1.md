@@ -38,12 +38,11 @@ Function InitializePrivate() Uint64
     ...
     300 STORE("artificerFee", <artificerFee>)    // This value will either be 0 or 1 defined by the creator, but defaults to 0. This is a fee donation back to the DERO Foundation.
     310 STORE("royalty", <royalty>)   // This defines the royalty that is paid back to the original creator of the asset. It can range between 0 and 100, taking into account remaining below 100 with artificerFee + royalty.
-    320 STORE("artificerAddr", ADDRESS_RAW("<artificerAddr>"))  // This is the DERO Foundation donation address.
-    330 STORE("ownerCanUpdate", 0)  // This defines whether only a creator (0) can update urls or an owner and/or a creator (1) can update urls.
-    340 STORE("nameHdr", "<nameHdr>") // This defines the name of the NFA, following the headers variable standard.
-    350 STORE("descrHdr", "<descrHdr>") // This defines the description of the NFA, following the headers variable standard.
-    360 STORE("typeHdr", "<typeHdr>") // This defines the type of the NFA, following the headers variable standard.
-    370 STORE("iconURLHdr", "<iconURLHdr>") // This defines the url for the icon representing the NFA, following the headers variable standard. This should be of size 100x100.
+    320 STORE("ownerCanUpdate", 0)  // This defines whether only a creator (0) can update urls or an owner and/or a creator (1) can update urls.
+    330 STORE("nameHdr", "<nameHdr>") // This defines the name of the NFA, following the headers variable standard.
+    340 STORE("descrHdr", "<descrHdr>") // This defines the description of the NFA, following the headers variable standard.
+    350 STORE("typeHdr", "<typeHdr>") // This defines the type of the NFA, following the headers variable standard.
+    360 STORE("iconURLHdr", "<iconURLHdr>") // This defines the url for the icon representing the NFA, following the headers variable standard. This should be of size 100x100.
     400 STORE("fileCheckC", "<fileCheckC>") // This defines the file signature 'C' header within the .sign file generated from the owner.
     410 STORE("fileCheckS", "<fileCheckS>") // This defines the file signature 'S' header within the .sign file generated from the owner.
     420 STORE("fileURL", "<fileURL>") // This defines the url for the file which this NFA is minting. This can be hosted anywhere the creator desires and is updateable by creator and/or owner depending on setting of ownerCanUpdate (0/1).

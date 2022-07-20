@@ -17,14 +17,14 @@ Function InitializePrivate() Uint64
     130 STORE("charityDonatePerc", 0)
     140 STORE("startPrice", 0)
     150 STORE("currBidPrice", 0)
+    160 STORE("artificerAddr", ADDRESS_RAW("dero1qy0khp9s9yw2h0eu20xmy9lth3zp5cacmx3rwt6k45l568d2mmcf6qgcsevzx"))
     300 STORE("artificerFee", 0)
     310 STORE("royalty", 0)
-    320 STORE("artificerAddr", ADDRESS_RAW("deto1qysvnwagyh7aej4na5m4s57a4ntlfk5lwxgpvm7hs5twpl85u9r7uqgs30kks"))
-    330 STORE("ownerCanUpdate", 0)
-    340 STORE("nameHdr", "<nameHdr>")
-    350 STORE("descrHdr", "<descrHdr>")
-    360 STORE("typeHdr", "<typeHdr>")
-    370 STORE("iconURLHdr", "<iconURLHdr>")
+    320 STORE("ownerCanUpdate", 0)
+    330 STORE("nameHdr", "<nameHdr>")
+    340 STORE("descrHdr", "<descrHdr>")
+    350 STORE("typeHdr", "<typeHdr>")
+    360 STORE("iconURLHdr", "<iconURLHdr>")
     400 STORE("fileCheckC", "<fileCheckC>")
     410 STORE("fileCheckS", "<fileCheckS>")
     420 STORE("fileURL", "<fileURL>")
@@ -32,7 +32,7 @@ Function InitializePrivate() Uint64
     440 STORE("coverURL", "<coverURL>")
     450 STORE("collection", "<collection>")
     500 IF LOAD("charityDonatePerc") + LOAD("artificerFee") + LOAD("royalty") > 100 THEN GOTO 999
-    600 IF IS_ADDRESS_VALID(ADDRESS_RAW("deto1qysvnwagyh7aej4na5m4s57a4ntlfk5lwxgpvm7hs5twpl85u9r7uqgs30kks")) == 1 THEN GOTO 610 ELSE GOTO 999
+    600 IF IS_ADDRESS_VALID(ADDRESS_RAW("dero1qy0khp9s9yw2h0eu20xmy9lth3zp5cacmx3rwt6k45l568d2mmcf6qgcsevzx")) == 1 THEN GOTO 610 ELSE GOTO 999
     610 SEND_ASSET_TO_ADDRESS(SIGNER(), 1, SCID())
     620 RETURN 0
     999 RETURN 1
