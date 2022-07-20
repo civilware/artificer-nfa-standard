@@ -1,4 +1,6 @@
 # Headers - Artificer NFA Headers Standard
+Copyright 2022 Civilware. All rights reserved.<br>
+dero1qy0khp9s9yw2h0eu20xmy9lth3zp5cacmx3rwt6k45l568d2mmcf6qgcsevzx
 
 ## Introduction
 
@@ -18,8 +20,3 @@ Within the Artificer NFA standards there is a subset of headers which are includ
     * Application
 * iconURLHdr
   * URL to the icon representing this asset. This image is of size 100x100.
-
-
-Copyright 2022 Civilware. All rights reserved.
-
-dero1qy0khp9s9yw2h0eu20xmy9lth3zp5cacmx3rwt6k45l568d2mmcf6qgcsevzx

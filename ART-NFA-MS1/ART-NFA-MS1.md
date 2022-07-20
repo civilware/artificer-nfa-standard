@@ -1,4 +1,6 @@
 # ART-NFA-MS1 - Artificer NFT Market Standard
+Copyright 2022 Civilware. All rights reserved.<br>
+dero1qy0khp9s9yw2h0eu20xmy9lth3zp5cacmx3rwt6k45l568d2mmcf6qgcsevzx
 
 ## Introduction
 
@@ -172,7 +174,3 @@ Txn
 ```
 curl -X POST http://127.0.0.1:40403/json_rpc -H 'Content-Type: application/json' -d '{"jsonrpc":"2.0","id":"0","method":"Transfer","params":{"ringsize":2,"fees":130,"sc_rpc":[{"name":"entrypoint","datatype":"S","value":"CancelListing"},{"name":"SC_ACTION","datatype":"U","value":0},{"name":"SC_ID","datatype":"H","value":"c4c6ad506e3d77eed4a3a5959e45b78337c7eed20de36ed2984943bda1ae3b94"}]}}'
 ```
-
-Copyright 2022 Civilware. All rights reserved.
-
-dero1qy0khp9s9yw2h0eu20xmy9lth3zp5cacmx3rwt6k45l568d2mmcf6qgcsevzx
