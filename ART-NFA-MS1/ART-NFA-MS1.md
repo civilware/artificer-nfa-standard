@@ -12,16 +12,18 @@ The ART-NFA-MS1 (Artificer NFT Market Standard) introduces a standard for Non-Fu
 
 Example functionalities ART-NFA-MS1 provides:
 
-* Issue an asset which correlates to a given fileurl and coverurl for display in dApps, like [Artificer](https://github.com/civilware/Artificer).
+* Issue an asset which correlates to a given fileurl and coverurl for display in dApps, like Artificer (coming soon).
+* Assets could be anything from Images, Video, Audio, Application etc.
+* ART-NFA-MS1 leverages DERO filesign capabilities to validate authenticity of the reflected asset files.
 * Start a sale or auction with capabilities of custom creator royalty, developer donation or charity donation.
-  * Charity donations can be defined custom at each start of a sale/auction while artificer donations and creator royalties are defined on asset creation.
+  * Charity donations can be defined custom at each start of a sale/auction while Artificer donations and creator royalties are defined on asset creation.
 * Transfer asset privately through normal DERO transactions and claim ownership to be reflected in the contract.
 
 ## Functions
 
 ```go
 function ClaimOwnership() Uint64
-function UpdateURLs(iconURL String, coverURL String, fileURL String, fileSignURL String) Uint64
+function Update(iconURL String, coverURL String, fileURL String, fileSignURL String, tags String) Uint64
 function Start(listType String, duration Uint64, startPrice Uint64, charityDonateAddr String, charityDonatePerc Uint64) Uint64
 function BuyItNow() Uint64
 function Bid() Uint64
@@ -31,18 +33,19 @@ function CancelListing() Uint64
 
 ## Initialization
 
-When deploying the standard with [Artificer](https://github.com/civilware/Artificer), metadata values are input for you and no action required. If you are deploying this standard manually, update the metadata values outlined below. For header values you can refer to the [Headers](../Headers/Headers.md) standard.
+When deploying the standard with Artificer (coming soon), metadata values are input for you and no action required. If you are deploying this standard manually, update the metadata values outlined below. For header values you can refer to the [Headers](../Headers/Headers.md) standard.
 
 ```go
 Function InitializePrivate() Uint64
     ...
-    300 STORE("artificerFee", <artificerFee>)    // This value will either be 0 or 1 defined by the creator, but defaults to 0. This is a fee donation back to the DERO Foundation.
-    310 STORE("royalty", <royalty>)   // This defines the royalty that is paid back to the original creator of the asset. It can range between 0 and 100, taking into account remaining below 100 with artificerFee + royalty.
-    320 STORE("ownerCanUpdate", 0)  // This defines whether only a creator (0) can update urls or an owner and/or a creator (1) can update urls.
+    300 STORE("artificerFee", 0)    // This value will either be 0 or 1 defined by the creator, but defaults to 0. This is a fee donation back to the DERO Foundation.
+    310 STORE("royalty", 0)   // This defines the royalty that is paid back to the original creator of the asset. It can range between 0 and 100, taking into account remaining below 100 with artificerFee + royalty.
+    320 STORE("ownerCanUpdate", 0)  // This defines whether only a creator (0) can update tags/urls or an owner and/or a creator (1) can update tags/urls.
     330 STORE("nameHdr", "<nameHdr>") // This defines the name of the NFA, following the headers variable standard.
     340 STORE("descrHdr", "<descrHdr>") // This defines the description of the NFA, following the headers variable standard.
     350 STORE("typeHdr", "<typeHdr>") // This defines the type of the NFA, following the headers variable standard.
     360 STORE("iconURLHdr", "<iconURLHdr>") // This defines the url for the icon representing the NFA, following the headers variable standard. This should be of size 100x100.
+    370 STORE("tagsHdr", "<tagsHdr>") // This defines the tags used in reference to this asset.
     400 STORE("fileCheckC", "<fileCheckC>") // This defines the file signature 'C' header within the .sign file generated from the owner.
     410 STORE("fileCheckS", "<fileCheckS>") // This defines the file signature 'S' header within the .sign file generated from the owner.
     420 STORE("fileURL", "<fileURL>") // This defines the url for the file which this NFA is minting. This can be hosted anywhere the creator desires and is updateable by creator and/or owner depending on setting of ownerCanUpdate (0/1).
@@ -77,21 +80,21 @@ DISCLAIMER: If ringsize > 2 ..
 
 GetGasEstimate
 ```
-curl -X POST http://127.0.0.1:40442/json_rpc -H 'Content-Type: application/json' -d '{"jsonrpc":"2.0","id":"0","method":"DERO.GetGasEstimate","params":{"signer":"deto1qy2fz6tx67resd2n4trf0gvtjwyh9y2j22m6e7wrshlrwcrw8kzjuqgs4vejf","ringsize":2,"sc_rpc":[{"name":"entrypoint","datatype":"S","value":"ClaimOwnership"},{"name":"SC_ACTION","datatype":"U","value":0},{"name":"SC_ID","datatype":"H","value":"c4c6ad506e3d77eed4a3a5959e45b78337c7eed20de36ed2984943bda1ae3b94"}],"transfers":[{"scid":"c4c6ad506e3d77eed4a3a5959e45b78337c7eed20de36ed2984943bda1ae3b94","amount":0,"burn":1}]}}'
+curl -X POST http://127.0.0.1:40442/json_rpc -H 'Content-Type: application/json' -d '{"jsonrpc":"2.0","id":"0","method":"DERO.GetGasEstimate","params":{"signer":"deto1qy2fz6tx67resd2n4trf0gvtjwyh9y2j22m6e7wrshlrwcrw8kzjuqgs4vejf","ringsize":2,"sc_rpc":[{"name":"entrypoint","datatype":"S","value":"ClaimOwnership"},{"name":"SC_ACTION","datatype":"U","value":0},{"name":"SC_ID","datatype":"H","value":"ee6f4864fdac050d89bafdaa144619a5c61bf772f189a10370142d6456684aff"}],"transfers":[{"scid":"ee6f4864fdac050d89bafdaa144619a5c61bf772f189a10370142d6456684aff","amount":0,"burn":1}]}}'
 ```
 Txn
 ```
-curl -X POST http://127.0.0.1:40403/json_rpc -H 'Content-Type: application/json' -d '{"jsonrpc":"2.0","id":"0","method":"Transfer","params":{"ringsize":2,"fees":155,"sc_rpc":[{"name":"entrypoint","datatype":"S","value":"ClaimOwnership"},{"name":"SC_ACTION","datatype":"U","value":0},{"name":"SC_ID","datatype":"H","value":"c4c6ad506e3d77eed4a3a5959e45b78337c7eed20de36ed2984943bda1ae3b94"}],"transfers":[{"scid":"c4c6ad506e3d77eed4a3a5959e45b78337c7eed20de36ed2984943bda1ae3b94","amount":0,"burn":1}]}}'
+curl -X POST http://127.0.0.1:40403/json_rpc -H 'Content-Type: application/json' -d '{"jsonrpc":"2.0","id":"0","method":"Transfer","params":{"ringsize":2,"fees":155,"sc_rpc":[{"name":"entrypoint","datatype":"S","value":"ClaimOwnership"},{"name":"SC_ACTION","datatype":"U","value":0},{"name":"SC_ID","datatype":"H","value":"ee6f4864fdac050d89bafdaa144619a5c61bf772f189a10370142d6456684aff"}],"transfers":[{"scid":"ee6f4864fdac050d89bafdaa144619a5c61bf772f189a10370142d6456684aff","amount":0,"burn":1}]}}'
 ```
 
-### UpdateURLs()
+### Update()
 GetGasEstimate
 ```
-curl -X POST http://127.0.0.1:40442/json_rpc -H 'Content-Type: application/json' -d '{"jsonrpc":"2.0","id":"0","method":"DERO.GetGasEstimate","params":{"signer":"deto1qy2fz6tx67resd2n4trf0gvtjwyh9y2j22m6e7wrshlrwcrw8kzjuqgs4vejf","ringsize":2,"sc_rpc":[{"name":"entrypoint","datatype":"S","value":"UpdateURLs"},{"name":"iconURL","datatype":"S","value":"https://github.com/Azylem/AZYWP0001/blob/main/AZYWP0001-EnterTheMachine-IC.png?raw=true"},{"name":"coverURL","datatype":"S","value":"https://github.com/Azylem/AZYWP0001/blob/main/AZYWP0001-EnterTheMachine-CA.png?raw=true"},{"name":"fileURL","datatype":"S","value":"https://github.com/Azylem/AZYWP0001/blob/main/AZYWP0001-EnterTheMachine-WP.png?raw=true"},{"name":"fileSignURL","datatype":"S","value":"https://github.com/Azylem/AZYWP0001/blob/main/AZYWP0001-EnterTheMachine-WP.png.sign?raw=true"},{"name":"SC_ACTION","datatype":"U","value":0},{"name":"SC_ID","datatype":"H","value":"c4c6ad506e3d77eed4a3a5959e45b78337c7eed20de36ed2984943bda1ae3b94"}]}}'
+curl -X POST http://127.0.0.1:40442/json_rpc -H 'Content-Type: application/json' -d '{"jsonrpc":"2.0","id":"0","method":"DERO.GetGasEstimate","params":{"signer":"deto1qy2fz6tx67resd2n4trf0gvtjwyh9y2j22m6e7wrshlrwcrw8kzjuqgs4vejf","ringsize":2,"sc_rpc":[{"name":"entrypoint","datatype":"S","value":"Update"},{"name":"iconURL","datatype":"S","value":"https://github.com/Azylem/AZYWP0001/blob/main/AZYWP0001-EnterTheMachine-IC.png?raw=true"},{"name":"coverURL","datatype":"S","value":"https://github.com/Azylem/AZYWP0001/blob/main/AZYWP0001-EnterTheMachine-CA.png?raw=true"},{"name":"fileURL","datatype":"S","value":"https://github.com/Azylem/AZYWP0001/blob/main/AZYWP0001-EnterTheMachine-WP.png?raw=true"},{"name":"fileSignURL","datatype":"S","value":"https://github.com/Azylem/AZYWP0001/blob/main/AZYWP0001-EnterTheMachine-WP.png.sign?raw=true"},{"name":"tags","datatype":"S","value":"#DERO"},{"name":"SC_ACTION","datatype":"U","value":0},{"name":"SC_ID","datatype":"H","value":"ee6f4864fdac050d89bafdaa144619a5c61bf772f189a10370142d6456684aff"}]}}'
 ```
 Txn
 ```
-curl -X POST http://127.0.0.1:40403/json_rpc -H 'Content-Type: application/json' -d '{"jsonrpc":"2.0","id":"0","method":"Transfer","params":{"ringsize":2,"fees":839,"sc_rpc":[{"name":"entrypoint","datatype":"S","value":"UpdateURLs"},{"name":"iconURL","datatype":"S","value":"https://github.com/Azylem/AZYWP0001/blob/main/AZYWP0001-EnterTheMachine-IC.png?raw=true"},{"name":"coverURL","datatype":"S","value":"https://github.com/Azylem/AZYWP0001/blob/main/AZYWP0001-EnterTheMachine-CA.png?raw=true"},{"name":"fileURL","datatype":"S","value":"https://github.com/Azylem/AZYWP0001/blob/main/AZYWP0001-EnterTheMachine-WP.png?raw=true"},{"name":"fileSignURL","datatype":"S","value":"https://github.com/Azylem/AZYWP0001/blob/main/AZYWP0001-EnterTheMachine-WP.png.sign?raw=true"},{"name":"SC_ACTION","datatype":"U","value":0},{"name":"SC_ID","datatype":"H","value":"c4c6ad506e3d77eed4a3a5959e45b78337c7eed20de36ed2984943bda1ae3b94"}]}}'
+curl -X POST http://127.0.0.1:40403/json_rpc -H 'Content-Type: application/json' -d '{"jsonrpc":"2.0","id":"0","method":"Transfer","params":{"ringsize":2,"fees":839,"sc_rpc":[{"name":"entrypoint","datatype":"S","value":"Update"},{"name":"iconURL","datatype":"S","value":"https://github.com/Azylem/AZYWP0001/blob/main/AZYWP0001-EnterTheMachine-IC.png?raw=true"},{"name":"coverURL","datatype":"S","value":"https://github.com/Azylem/AZYWP0001/blob/main/AZYWP0001-EnterTheMachine-CA.png?raw=true"},{"name":"fileURL","datatype":"S","value":"https://github.com/Azylem/AZYWP0001/blob/main/AZYWP0001-EnterTheMachine-WP.png?raw=true"},{"name":"fileSignURL","datatype":"S","value":"https://github.com/Azylem/AZYWP0001/blob/main/AZYWP0001-EnterTheMachine-WP.png.sign?raw=true"},{"name":"tags","datatype":"S","value":"#DERO"},{"name":"SC_ACTION","datatype":"U","value":0},{"name":"SC_ID","datatype":"H","value":"ee6f4864fdac050d89bafdaa144619a5c61bf772f189a10370142d6456684aff"}]}}'
 ```
 
 ### Start()
@@ -108,20 +111,20 @@ DISCLAIMER: For unregistered charity addresses ..
 
 GetGasEstimate
 ```
-curl -X POST http://127.0.0.1:40442/json_rpc -H 'Content-Type: application/json' -d '{"jsonrpc":"2.0","id":"0","method":"DERO.GetGasEstimate","params":{"signer":"deto1qy2fz6tx67resd2n4trf0gvtjwyh9y2j22m6e7wrshlrwcrw8kzjuqgs4vejf","ringsize":2,"sc_rpc":[{"name":"entrypoint","datatype":"S","value":"Start"},{"name":"listType","datatype":"S","value":"sale"},{"name":"duration","datatype":"U","value":24},{"name":"startPrice","datatype":"U","value":500},{"name":"charityDonateAddr","datatype":"S","value":"deto1qy0fwfmqlmnz6la2ey27qfsd9rt0mtjhset2say3rf77l0cu6luz7qg96n8x7"},{"name":"charityDonatePerc","datatype":"U","value":1},{"name":"SC_ACTION","datatype":"U","value":0},{"name":"SC_ID","datatype":"H","value":"c4c6ad506e3d77eed4a3a5959e45b78337c7eed20de36ed2984943bda1ae3b94"}],"transfers":[{"scid":"c4c6ad506e3d77eed4a3a5959e45b78337c7eed20de36ed2984943bda1ae3b94","amount":0,"burn":1}]}}'
+curl -X POST http://127.0.0.1:40442/json_rpc -H 'Content-Type: application/json' -d '{"jsonrpc":"2.0","id":"0","method":"DERO.GetGasEstimate","params":{"signer":"deto1qy2fz6tx67resd2n4trf0gvtjwyh9y2j22m6e7wrshlrwcrw8kzjuqgs4vejf","ringsize":2,"sc_rpc":[{"name":"entrypoint","datatype":"S","value":"Start"},{"name":"listType","datatype":"S","value":"sale"},{"name":"duration","datatype":"U","value":24},{"name":"startPrice","datatype":"U","value":500},{"name":"charityDonateAddr","datatype":"S","value":"deto1qy0fwfmqlmnz6la2ey27qfsd9rt0mtjhset2say3rf77l0cu6luz7qg96n8x7"},{"name":"charityDonatePerc","datatype":"U","value":1},{"name":"SC_ACTION","datatype":"U","value":0},{"name":"SC_ID","datatype":"H","value":"ee6f4864fdac050d89bafdaa144619a5c61bf772f189a10370142d6456684aff"}],"transfers":[{"scid":"ee6f4864fdac050d89bafdaa144619a5c61bf772f189a10370142d6456684aff","amount":0,"burn":1}]}}'
 ```
 Txn
 ```
-curl -X POST http://127.0.0.1:40403/json_rpc -H 'Content-Type: application/json' -d '{"jsonrpc":"2.0","id":"0","method":"Transfer","params":{"ringsize":2,"fees":292,"sc_rpc":[{"name":"entrypoint","datatype":"S","value":"Start"},{"name":"listType","datatype":"S","value":"sale"},{"name":"duration","datatype":"U","value":24},{"name":"startPrice","datatype":"U","value":500},{"name":"charityDonateAddr","datatype":"S","value":"deto1qy0fwfmqlmnz6la2ey27qfsd9rt0mtjhset2say3rf77l0cu6luz7qg96n8x7"},{"name":"charityDonatePerc","datatype":"U","value":1},{"name":"SC_ACTION","datatype":"U","value":0},{"name":"SC_ID","datatype":"H","value":"c4c6ad506e3d77eed4a3a5959e45b78337c7eed20de36ed2984943bda1ae3b94"}],"transfers":[{"scid":"c4c6ad506e3d77eed4a3a5959e45b78337c7eed20de36ed2984943bda1ae3b94","amount":0,"burn":1}]}}'
+curl -X POST http://127.0.0.1:40403/json_rpc -H 'Content-Type: application/json' -d '{"jsonrpc":"2.0","id":"0","method":"Transfer","params":{"ringsize":2,"fees":292,"sc_rpc":[{"name":"entrypoint","datatype":"S","value":"Start"},{"name":"listType","datatype":"S","value":"sale"},{"name":"duration","datatype":"U","value":24},{"name":"startPrice","datatype":"U","value":500},{"name":"charityDonateAddr","datatype":"S","value":"deto1qy0fwfmqlmnz6la2ey27qfsd9rt0mtjhset2say3rf77l0cu6luz7qg96n8x7"},{"name":"charityDonatePerc","datatype":"U","value":1},{"name":"SC_ACTION","datatype":"U","value":0},{"name":"SC_ID","datatype":"H","value":"ee6f4864fdac050d89bafdaa144619a5c61bf772f189a10370142d6456684aff"}],"transfers":[{"scid":"ee6f4864fdac050d89bafdaa144619a5c61bf772f189a10370142d6456684aff","amount":0,"burn":1}]}}'
 ```
 #### Auction
 GetGasEstimate
 ```
-curl -X POST http://127.0.0.1:40442/json_rpc -H 'Content-Type: application/json' -d '{"jsonrpc":"2.0","id":"0","method":"DERO.GetGasEstimate","params":{"signer":"deto1qy2fz6tx67resd2n4trf0gvtjwyh9y2j22m6e7wrshlrwcrw8kzjuqgs4vejf","ringsize":2,"sc_rpc":[{"name":"entrypoint","datatype":"S","value":"Start"},{"name":"listType","datatype":"S","value":"auction"},{"name":"duration","datatype":"U","value":24},{"name":"startPrice","datatype":"U","value":500},{"name":"charityDonateAddr","datatype":"S","value":"deto1qy0fwfmqlmnz6la2ey27qfsd9rt0mtjhset2say3rf77l0cu6luz7qg96n8x7"},{"name":"charityDonatePerc","datatype":"U","value":1},{"name":"SC_ACTION","datatype":"U","value":0},{"name":"SC_ID","datatype":"H","value":"c4c6ad506e3d77eed4a3a5959e45b78337c7eed20de36ed2984943bda1ae3b94"}],"transfers":[{"scid":"c4c6ad506e3d77eed4a3a5959e45b78337c7eed20de36ed2984943bda1ae3b94","amount":0,"burn":1}]}}'
+curl -X POST http://127.0.0.1:40442/json_rpc -H 'Content-Type: application/json' -d '{"jsonrpc":"2.0","id":"0","method":"DERO.GetGasEstimate","params":{"signer":"deto1qy2fz6tx67resd2n4trf0gvtjwyh9y2j22m6e7wrshlrwcrw8kzjuqgs4vejf","ringsize":2,"sc_rpc":[{"name":"entrypoint","datatype":"S","value":"Start"},{"name":"listType","datatype":"S","value":"auction"},{"name":"duration","datatype":"U","value":24},{"name":"startPrice","datatype":"U","value":500},{"name":"charityDonateAddr","datatype":"S","value":"deto1qy0fwfmqlmnz6la2ey27qfsd9rt0mtjhset2say3rf77l0cu6luz7qg96n8x7"},{"name":"charityDonatePerc","datatype":"U","value":1},{"name":"SC_ACTION","datatype":"U","value":0},{"name":"SC_ID","datatype":"H","value":"ee6f4864fdac050d89bafdaa144619a5c61bf772f189a10370142d6456684aff"}],"transfers":[{"scid":"ee6f4864fdac050d89bafdaa144619a5c61bf772f189a10370142d6456684aff","amount":0,"burn":1}]}}'
 ```
 Txn
 ```
-curl -X POST http://127.0.0.1:40403/json_rpc -H 'Content-Type: application/json' -d '{"jsonrpc":"2.0","id":"0","method":"Transfer","params":{"ringsize":2,"fees":298,"sc_rpc":[{"name":"entrypoint","datatype":"S","value":"Start"},{"name":"listType","datatype":"S","value":"auction"},{"name":"duration","datatype":"U","value":24},{"name":"startPrice","datatype":"U","value":500},{"name":"charityDonateAddr","datatype":"S","value":"deto1qy0fwfmqlmnz6la2ey27qfsd9rt0mtjhset2say3rf77l0cu6luz7qg96n8x7"},{"name":"charityDonatePerc","datatype":"U","value":1},{"name":"SC_ACTION","datatype":"U","value":0},{"name":"SC_ID","datatype":"H","value":"c4c6ad506e3d77eed4a3a5959e45b78337c7eed20de36ed2984943bda1ae3b94"}],"transfers":[{"scid":"c4c6ad506e3d77eed4a3a5959e45b78337c7eed20de36ed2984943bda1ae3b94","amount":0,"burn":1}]}}'
+curl -X POST http://127.0.0.1:40403/json_rpc -H 'Content-Type: application/json' -d '{"jsonrpc":"2.0","id":"0","method":"Transfer","params":{"ringsize":2,"fees":298,"sc_rpc":[{"name":"entrypoint","datatype":"S","value":"Start"},{"name":"listType","datatype":"S","value":"auction"},{"name":"duration","datatype":"U","value":24},{"name":"startPrice","datatype":"U","value":500},{"name":"charityDonateAddr","datatype":"S","value":"deto1qy0fwfmqlmnz6la2ey27qfsd9rt0mtjhset2say3rf77l0cu6luz7qg96n8x7"},{"name":"charityDonatePerc","datatype":"U","value":1},{"name":"SC_ACTION","datatype":"U","value":0},{"name":"SC_ID","datatype":"H","value":"ee6f4864fdac050d89bafdaa144619a5c61bf772f189a10370142d6456684aff"}],"transfers":[{"scid":"ee6f4864fdac050d89bafdaa144619a5c61bf772f189a10370142d6456684aff","amount":0,"burn":1}]}}'
 ```
 
 ### BuyItNow()
@@ -132,11 +135,11 @@ DISCLAIMER: If ringsize > 2 ..
 
 GetGasEstimate
 ```
-curl -X POST http://127.0.0.1:40442/json_rpc -H 'Content-Type: application/json' -d '{"jsonrpc":"2.0","id":"0","method":"DERO.GetGasEstimate","params":{"signer":"deto1qysvnwagyh7aej4na5m4s57a4ntlfk5lwxgpvm7hs5twpl85u9r7uqgs30kks","ringsize":2,"sc_rpc":[{"name":"entrypoint","datatype":"S","value":"BuyItNow"},{"name":"SC_ACTION","datatype":"U","value":0},{"name":"SC_ID","datatype":"H","value":"c4c6ad506e3d77eed4a3a5959e45b78337c7eed20de36ed2984943bda1ae3b94"}],"transfers":[{"destination":"deto1qy0ehnqjpr0wxqnknyc66du2fsxyktppkr8m8e6jvplp954klfjz2qqdzcd8p","amount":0,"burn":500}]}}'
+curl -X POST http://127.0.0.1:40442/json_rpc -H 'Content-Type: application/json' -d '{"jsonrpc":"2.0","id":"0","method":"DERO.GetGasEstimate","params":{"signer":"deto1qysvnwagyh7aej4na5m4s57a4ntlfk5lwxgpvm7hs5twpl85u9r7uqgs30kks","ringsize":2,"sc_rpc":[{"name":"entrypoint","datatype":"S","value":"BuyItNow"},{"name":"SC_ACTION","datatype":"U","value":0},{"name":"SC_ID","datatype":"H","value":"ee6f4864fdac050d89bafdaa144619a5c61bf772f189a10370142d6456684aff"}],"transfers":[{"destination":"deto1qy0ehnqjpr0wxqnknyc66du2fsxyktppkr8m8e6jvplp954klfjz2qqdzcd8p","amount":0,"burn":500}]}}'
 ```
 Txn
 ```
-curl -X POST http://127.0.0.1:40411/json_rpc -H 'Content-Type: application/json' -d '{"jsonrpc":"2.0","id":"0","method":"Transfer","params":{"ringsize":2,"fees":200,"sc_rpc":[{"name":"entrypoint","datatype":"S","value":"BuyItNow"},{"name":"SC_ACTION","datatype":"U","value":0},{"name":"SC_ID","datatype":"H","value":"c4c6ad506e3d77eed4a3a5959e45b78337c7eed20de36ed2984943bda1ae3b94"}],"transfers":[{"destination":"deto1qy0ehnqjpr0wxqnknyc66du2fsxyktppkr8m8e6jvplp954klfjz2qqdzcd8p","amount":0,"burn":500}]}}'
+curl -X POST http://127.0.0.1:40411/json_rpc -H 'Content-Type: application/json' -d '{"jsonrpc":"2.0","id":"0","method":"Transfer","params":{"ringsize":2,"fees":200,"sc_rpc":[{"name":"entrypoint","datatype":"S","value":"BuyItNow"},{"name":"SC_ACTION","datatype":"U","value":0},{"name":"SC_ID","datatype":"H","value":"ee6f4864fdac050d89bafdaa144619a5c61bf772f189a10370142d6456684aff"}],"transfers":[{"destination":"deto1qy0ehnqjpr0wxqnknyc66du2fsxyktppkr8m8e6jvplp954klfjz2qqdzcd8p","amount":0,"burn":500}]}}'
 ```
 
 ### Bid()
@@ -147,29 +150,29 @@ DISCLAIMER: If ringsize > 2 ..
 
 GetGasEstimate
 ```
-curl -X POST http://127.0.0.1:40442/json_rpc -H 'Content-Type: application/json' -d '{"jsonrpc":"2.0","id":"0","method":"DERO.GetGasEstimate","params":{"signer":"deto1qysvnwagyh7aej4na5m4s57a4ntlfk5lwxgpvm7hs5twpl85u9r7uqgs30kks","ringsize":2,"sc_rpc":[{"name":"entrypoint","datatype":"S","value":"Bid"},{"name":"SC_ACTION","datatype":"U","value":0},{"name":"SC_ID","datatype":"H","value":"c4c6ad506e3d77eed4a3a5959e45b78337c7eed20de36ed2984943bda1ae3b94"}],"transfers":[{"destination":"deto1qy0ehnqjpr0wxqnknyc66du2fsxyktppkr8m8e6jvplp954klfjz2qqdzcd8p","amount":0,"burn":500}]}}'
+curl -X POST http://127.0.0.1:40442/json_rpc -H 'Content-Type: application/json' -d '{"jsonrpc":"2.0","id":"0","method":"DERO.GetGasEstimate","params":{"signer":"deto1qysvnwagyh7aej4na5m4s57a4ntlfk5lwxgpvm7hs5twpl85u9r7uqgs30kks","ringsize":2,"sc_rpc":[{"name":"entrypoint","datatype":"S","value":"Bid"},{"name":"SC_ACTION","datatype":"U","value":0},{"name":"SC_ID","datatype":"H","value":"ee6f4864fdac050d89bafdaa144619a5c61bf772f189a10370142d6456684aff"}],"transfers":[{"destination":"deto1qy0ehnqjpr0wxqnknyc66du2fsxyktppkr8m8e6jvplp954klfjz2qqdzcd8p","amount":0,"burn":500}]}}'
 ```
 Txn
 ```
-curl -X POST http://127.0.0.1:40411/json_rpc -H 'Content-Type: application/json' -d '{"jsonrpc":"2.0","id":"0","method":"Transfer","params":{"ringsize":2,"fees":200,"sc_rpc":[{"name":"entrypoint","datatype":"S","value":"Bid"},{"name":"SC_ACTION","datatype":"U","value":0},{"name":"SC_ID","datatype":"H","value":"c4c6ad506e3d77eed4a3a5959e45b78337c7eed20de36ed2984943bda1ae3b94"}],"transfers":[{"destination":"deto1qy0ehnqjpr0wxqnknyc66du2fsxyktppkr8m8e6jvplp954klfjz2qqdzcd8p","amount":0,"burn":500}]}}'
+curl -X POST http://127.0.0.1:40411/json_rpc -H 'Content-Type: application/json' -d '{"jsonrpc":"2.0","id":"0","method":"Transfer","params":{"ringsize":2,"fees":200,"sc_rpc":[{"name":"entrypoint","datatype":"S","value":"Bid"},{"name":"SC_ACTION","datatype":"U","value":0},{"name":"SC_ID","datatype":"H","value":"ee6f4864fdac050d89bafdaa144619a5c61bf772f189a10370142d6456684aff"}],"transfers":[{"destination":"deto1qy0ehnqjpr0wxqnknyc66du2fsxyktppkr8m8e6jvplp954klfjz2qqdzcd8p","amount":0,"burn":500}]}}'
 ```
 
 ### CloseListing()
 GetGasEstimate
 ```
-curl -X POST http://127.0.0.1:40442/json_rpc -H 'Content-Type: application/json' -d '{"jsonrpc":"2.0","id":"0","method":"DERO.GetGasEstimate","params":{"signer":"deto1qy2fz6tx67resd2n4trf0gvtjwyh9y2j22m6e7wrshlrwcrw8kzjuqgs4vejf","ringsize":2,"sc_rpc":[{"name":"entrypoint","datatype":"S","value":"CloseListing"},{"name":"SC_ACTION","datatype":"U","value":0},{"name":"SC_ID","datatype":"H","value":"c4c6ad506e3d77eed4a3a5959e45b78337c7eed20de36ed2984943bda1ae3b94"}]}}'
+curl -X POST http://127.0.0.1:40442/json_rpc -H 'Content-Type: application/json' -d '{"jsonrpc":"2.0","id":"0","method":"DERO.GetGasEstimate","params":{"signer":"deto1qy2fz6tx67resd2n4trf0gvtjwyh9y2j22m6e7wrshlrwcrw8kzjuqgs4vejf","ringsize":2,"sc_rpc":[{"name":"entrypoint","datatype":"S","value":"CloseListing"},{"name":"SC_ACTION","datatype":"U","value":0},{"name":"SC_ID","datatype":"H","value":"ee6f4864fdac050d89bafdaa144619a5c61bf772f189a10370142d6456684aff"}]}}'
 ```
 Txn
 ```
-curl -X POST http://127.0.0.1:40403/json_rpc -H 'Content-Type: application/json' -d '{"jsonrpc":"2.0","id":"0","method":"Transfer","params":{"ringsize":2,"fees":225,"sc_rpc":[{"name":"entrypoint","datatype":"S","value":"CloseListing"},{"name":"SC_ACTION","datatype":"U","value":0},{"name":"SC_ID","datatype":"H","value":"c4c6ad506e3d77eed4a3a5959e45b78337c7eed20de36ed2984943bda1ae3b94"}]}}'
+curl -X POST http://127.0.0.1:40403/json_rpc -H 'Content-Type: application/json' -d '{"jsonrpc":"2.0","id":"0","method":"Transfer","params":{"ringsize":2,"fees":225,"sc_rpc":[{"name":"entrypoint","datatype":"S","value":"CloseListing"},{"name":"SC_ACTION","datatype":"U","value":0},{"name":"SC_ID","datatype":"H","value":"ee6f4864fdac050d89bafdaa144619a5c61bf772f189a10370142d6456684aff"}]}}'
 ```
 
 ### CancelListing()
 GetGasEstimate
 ```
-curl -X POST http://127.0.0.1:40442/json_rpc -H 'Content-Type: application/json' -d '{"jsonrpc":"2.0","id":"0","method":"DERO.GetGasEstimate","params":{"signer":"deto1qy2fz6tx67resd2n4trf0gvtjwyh9y2j22m6e7wrshlrwcrw8kzjuqgs4vejf","ringsize":2,"sc_rpc":[{"name":"entrypoint","datatype":"S","value":"CancelListing"},{"name":"SC_ACTION","datatype":"U","value":0},{"name":"SC_ID","datatype":"H","value":"c4c6ad506e3d77eed4a3a5959e45b78337c7eed20de36ed2984943bda1ae3b94"}]}}'
+curl -X POST http://127.0.0.1:40442/json_rpc -H 'Content-Type: application/json' -d '{"jsonrpc":"2.0","id":"0","method":"DERO.GetGasEstimate","params":{"signer":"deto1qy2fz6tx67resd2n4trf0gvtjwyh9y2j22m6e7wrshlrwcrw8kzjuqgs4vejf","ringsize":2,"sc_rpc":[{"name":"entrypoint","datatype":"S","value":"CancelListing"},{"name":"SC_ACTION","datatype":"U","value":0},{"name":"SC_ID","datatype":"H","value":"ee6f4864fdac050d89bafdaa144619a5c61bf772f189a10370142d6456684aff"}]}}'
 ```
 Txn
 ```
-curl -X POST http://127.0.0.1:40403/json_rpc -H 'Content-Type: application/json' -d '{"jsonrpc":"2.0","id":"0","method":"Transfer","params":{"ringsize":2,"fees":130,"sc_rpc":[{"name":"entrypoint","datatype":"S","value":"CancelListing"},{"name":"SC_ACTION","datatype":"U","value":0},{"name":"SC_ID","datatype":"H","value":"c4c6ad506e3d77eed4a3a5959e45b78337c7eed20de36ed2984943bda1ae3b94"}]}}'
+curl -X POST http://127.0.0.1:40403/json_rpc -H 'Content-Type: application/json' -d '{"jsonrpc":"2.0","id":"0","method":"Transfer","params":{"ringsize":2,"fees":130,"sc_rpc":[{"name":"entrypoint","datatype":"S","value":"CancelListing"},{"name":"SC_ACTION","datatype":"U","value":0},{"name":"SC_ID","datatype":"H","value":"ee6f4864fdac050d89bafdaa144619a5c61bf772f189a10370142d6456684aff"}]}}'
 ```

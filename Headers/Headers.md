@@ -20,3 +20,5 @@ Within the Artificer NFA standards there is a subset of headers which are includ
     * Application
 * iconURLHdr
   * URL to the icon representing this asset. This image is of size 100x100.
+* tagsHdr
+  * Tags for #giving #people #their #tags

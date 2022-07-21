@@ -25,6 +25,7 @@ Function InitializePrivate() Uint64
     340 STORE("descrHdr", "<descrHdr>")
     350 STORE("typeHdr", "<typeHdr>")
     360 STORE("iconURLHdr", "<iconURLHdr>")
+    370 STORE("tagsHdr", "<tagsHdr>")
     400 STORE("fileCheckC", "<fileCheckC>")
     410 STORE("fileCheckS", "<fileCheckS>")
     420 STORE("fileURL", "<fileURL>")
@@ -49,7 +50,7 @@ Function ClaimOwnership() Uint64
     999 RETURN 1
 End Function
 
-Function UpdateURLs(iconURL String, coverURL String, fileURL String, fileSignURL String) Uint64
+Function Update(iconURL String, coverURL String, fileURL String, fileSignURL String, tags String) Uint64
     10  IF LOAD("creatorAddr") == SIGNER() THEN GOTO 40 ELSE GOTO 20
     20  IF LOAD("ownerCanUpdate") == 1 THEN GOTO 30 ELSE GOTO 999
     30  IF LOAD("owner") == SIGNER() THEN GOTO 40 ELSE GOTO 999
@@ -61,7 +62,9 @@ Function UpdateURLs(iconURL String, coverURL String, fileURL String, fileSignURL
     90  STORE("fileURL", fileURL)
     100 IF fileSignURL != "" THEN GOTO 110 ELSE GOTO 120
     110 STORE("fileSignURL", fileSignURL)
-    120 RETURN 0
+    120 IF tags != "" THEN GOTO 130 ELSE GOTO 140
+    130 STORE("tagsHdr", tags)
+    140 RETURN 0
     999 RETURN 1
 End Function
 
