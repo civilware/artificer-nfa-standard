@@ -55,7 +55,7 @@ End Function
 
 ## Template
 
-* [ART-NFA-MS1](https://github.com/civilware/Artificer/src/branch/master/contracts/ART-NFA-MS1/ART-NFA-MS1.bas)
+* [ART-NFA-MS1](./ART-NFA-MS1.bas)
 
 ## Utilization
 
