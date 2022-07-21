@@ -5,19 +5,20 @@ Function InitializePrivate() Uint64
     10  IF EXISTS("owner") == 0 THEN GOTO 20 ELSE GOTO 999
     20  STORE("owner", SIGNER())
     30  STORE("creatorAddr", SIGNER())
-    40  STORE("active", 0)
-    50  STORE("scBalance", 0)
-    60  STORE("cancelBuffer", 300)
-    70  STORE("startBlockTime", 0)
-    80  STORE("endBlockTime", 0)
-    90  STORE("bidCount", 0)
-    100 STORE("staticBidIncr", 10000)
-    110 STORE("percentBidIncr", 1000)
-    120 STORE("listType", "")
-    130 STORE("charityDonatePerc", 0)
-    140 STORE("startPrice", 0)
-    150 STORE("currBidPrice", 0)
-    160 STORE("artificerAddr", ADDRESS_RAW("dero1qy0khp9s9yw2h0eu20xmy9lth3zp5cacmx3rwt6k45l568d2mmcf6qgcsevzx"))
+    40  STORE("artificerAddr", ADDRESS_RAW("dero1qy0khp9s9yw2h0eu20xmy9lth3zp5cacmx3rwt6k45l568d2mmcf6qgcsevzx"))
+    50  IF IS_ADDRESS_VALID(LOAD("artificerAddr")) == 1 THEN GOTO 60 ELSE GOTO 999
+    60  STORE("active", 0)
+    70  STORE("scBalance", 0)
+    80  STORE("cancelBuffer", 300)
+    90  STORE("startBlockTime", 0)
+    100 STORE("endBlockTime", 0)
+    110 STORE("bidCount", 0)
+    120 STORE("staticBidIncr", 10000)
+    130 STORE("percentBidIncr", 1000)
+    140 STORE("listType", "")
+    150 STORE("charityDonatePerc", 0)
+    160 STORE("startPrice", 0)
+    170 STORE("currBidPrice", 0)
     300 STORE("artificerFee", 0)
     310 STORE("royalty", 0)
     320 STORE("ownerCanUpdate", 0)
@@ -33,9 +34,8 @@ Function InitializePrivate() Uint64
     440 STORE("coverURL", "<coverURL>")
     450 STORE("collection", "<collection>")
     500 IF LOAD("charityDonatePerc") + LOAD("artificerFee") + LOAD("royalty") > 100 THEN GOTO 999
-    600 IF IS_ADDRESS_VALID(ADDRESS_RAW("dero1qy0khp9s9yw2h0eu20xmy9lth3zp5cacmx3rwt6k45l568d2mmcf6qgcsevzx")) == 1 THEN GOTO 610 ELSE GOTO 999
-    610 SEND_ASSET_TO_ADDRESS(SIGNER(), 1, SCID())
-    620 RETURN 0
+    600 SEND_ASSET_TO_ADDRESS(SIGNER(), 1, SCID())
+    610 RETURN 0
     999 RETURN 1
 End Function
 
