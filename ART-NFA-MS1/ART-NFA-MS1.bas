@@ -2,6 +2,27 @@
 //    Artificer NFA Market Standard (ART-NFA-MS1)
 
 Function InitializePrivate() Uint64
+    10  IF EXISTS("owner") == 0 THEN GOTO 300 ELSE GOTO 999
+    300 STORE("artificerFee", 0)
+    310 STORE("royalty", 0)
+    320 STORE("ownerCanUpdate", 0)
+    330 STORE("nameHdr", "<nameHdr>")
+    340 STORE("descrHdr", "<descrHdr>")
+    350 STORE("typeHdr", "<typeHdr>")
+    360 STORE("iconURLHdr", "<iconURLHdr>")
+    370 STORE("tagsHdr", "<tagsHdr>")
+    400 STORE("fileCheckC", "<fileCheckC>")
+    410 STORE("fileCheckS", "<fileCheckS>")
+    420 STORE("fileURL", "<fileURL>")
+    430 STORE("fileSignURL", "<fileSignURL>")
+    440 STORE("coverURL", "<coverURL>")
+    450 STORE("collection", "<collection>")
+    500 IF init() == 0 THEN GOTO 600 ELSE GOTO 999
+    600 RETURN 0
+    999 RETURN 1
+End Function
+
+Function init() Uint64
     10  IF EXISTS("owner") == 0 THEN GOTO 20 ELSE GOTO 999
     20  STORE("owner", SIGNER())
     30  STORE("creatorAddr", SIGNER())
@@ -19,20 +40,7 @@ Function InitializePrivate() Uint64
     150 STORE("charityDonatePerc", 0)
     160 STORE("startPrice", 0)
     170 STORE("currBidPrice", 0)
-    300 STORE("artificerFee", 0)
-    310 STORE("royalty", 0)
-    320 STORE("ownerCanUpdate", 0)
-    330 STORE("nameHdr", "<nameHdr>")
-    340 STORE("descrHdr", "<descrHdr>")
-    350 STORE("typeHdr", "<typeHdr>")
-    360 STORE("iconURLHdr", "<iconURLHdr>")
-    370 STORE("tagsHdr", "<tagsHdr>")
-    400 STORE("fileCheckC", "<fileCheckC>")
-    410 STORE("fileCheckS", "<fileCheckS>")
-    420 STORE("fileURL", "<fileURL>")
-    430 STORE("fileSignURL", "<fileSignURL>")
-    440 STORE("coverURL", "<coverURL>")
-    450 STORE("collection", "<collection>")
+    180 STORE("version", "1.1.0")
     500 IF LOAD("charityDonatePerc") + LOAD("artificerFee") + LOAD("royalty") > 100 THEN GOTO 999
     600 SEND_ASSET_TO_ADDRESS(SIGNER(), 1, SCID())
     610 RETURN 0
@@ -131,33 +139,34 @@ Function BuyItNow() Uint64
 End Function
 
 Function Bid() Uint64
-    10  dim tempCounter, activeFlag as Uint64
+    10  dim activeFlag, bidAmt as Uint64
     15  IF ADDRESS_STRING(SIGNER()) == "" THEN GOTO 999
-    20  LET tempCounter = LOAD("bidCount") + 1
+    25  LET bidAmt = DEROVALUE()
     30  IF LOAD("owner") == SIGNER() THEN GOTO 920 ELSE GOTO 35
     35  LET activeFlag = checkActive("auction")
     40  IF activeFlag == 0 THEN GOTO 50 ELSE GOTO 500
     50  IF LOAD("scBalance") == 1 THEN GOTO 51 ELSE GOTO 920
     51  IF EXISTS(SIGNER() + "-bidDate") == 1 THEN GOTO 60 ELSE GOTO 70
     60  IF LOAD(SIGNER() + "-bidDate") < BLOCK_TIMESTAMP() THEN GOTO 70 ELSE GOTO 920
-    70  IF DEROVALUE() >= LOAD("startPrice") THEN GOTO 80 ELSE GOTO 920
-    80  IF DEROVALUE() >= LOAD("currBidPrice") THEN GOTO 90 ELSE GOTO 920
-    90  STORE("currBidPrice", findLesserIncrease(DEROVALUE()))
-    100 STORE("bidCount", tempCounter)
-    110 STORE(ITOA(tempCounter) + "-bidAddr", SIGNER())
-    120 STORE(ITOA(tempCounter) + "-bidAmt", DEROVALUE())
-    130 STORE(SIGNER() + "-bidDate", BLOCK_TIMESTAMP())
-    140 IF LOAD("endBlockTime") - 900 <= BLOCK_TIMESTAMP() THEN GOTO 150 ELSE GOTO 160
-    150 STORE("endBlockTime", BLOCK_TIMESTAMP() + 900)
-    160 RETURN 0
+    70  IF bidAmt >= LOAD("startPrice") THEN GOTO 80 ELSE GOTO 920
+    80  IF bidAmt >= LOAD("currBidPrice") THEN GOTO 90 ELSE GOTO 920
+    90  STORE("currBidPrice", findLesserIncrease(bidAmt))
+    100 outbidReturns()
+    120 STORE("currBidAddr", SIGNER())
+    130 STORE("currBidAmt", bidAmt)
+    140 STORE(SIGNER() + "-bidDate", BLOCK_TIMESTAMP())
+    150 STORE("bidCount", LOAD("bidCount") + 1)
+    170 IF LOAD("endBlockTime") - 900 <= BLOCK_TIMESTAMP() THEN GOTO 150 ELSE GOTO 160
+    180 STORE("endBlockTime", BLOCK_TIMESTAMP() + 900)
+    190 RETURN 0
     500 IF activeFlag == 999 THEN GOTO 920 ELSE GOTO 510
     510 IF activeFlag == 111 THEN GOTO 520 ELSE GOTO 920
-    520 IF DEROVALUE() > 0 THEN GOTO 530 ELSE GOTO 540
-    530 SEND_DERO_TO_ADDRESS(SIGNER(), DEROVALUE())
+    520 IF bidAmt > 0 THEN GOTO 530 ELSE GOTO 540
+    530 SEND_DERO_TO_ADDRESS(SIGNER(), bidAmt)
     540 processHighestBidder()
-    570 RETURN 0
-    920 IF DEROVALUE() > 0 THEN GOTO 925 ELSE GOTO 930
-    925 SEND_DERO_TO_ADDRESS(SIGNER(), DEROVALUE())
+    550 RETURN 0
+    920 IF bidAmt > 0 THEN GOTO 925 ELSE GOTO 930
+    925 SEND_DERO_TO_ADDRESS(SIGNER(), bidAmt)
     930 RETURN 0
     999 RETURN 1
 End Function
@@ -182,7 +191,7 @@ Function CancelListing() Uint64
     30  IF LOAD("owner") == SIGNER() THEN GOTO 50 ELSE GOTO 999
     50  IF checkActive(LOAD("listType")) == 0 THEN GOTO 60 ELSE GOTO 999
     60  IF (LOAD("startBlockTime") + LOAD("cancelBuffer")) >= BLOCK_TIMESTAMP() THEN GOTO 460 ELSE GOTO 999
-    460 processDEROReturns(LOAD("bidCount"))
+    460 outbidReturns()
     600 SEND_ASSET_TO_ADDRESS(LOAD("owner"), LOAD("scBalance"), SCID())
     610 STORE("scBalance", 0)
     620 resetVars(1)
@@ -202,8 +211,10 @@ Function generateEndBlock(duration Uint64, startBlockTime Uint64) Uint64
     20  LET timeinseconds = 3600 * duration
     30  IF timeinseconds == 0 THEN GOTO 40 ELSE GOTO 50
     40  LET timeinseconds = 3600
-    50  LET endBlockTime = startBlockTime + timeinseconds
-    60  RETURN endBlockTime
+    50  IF timeinseconds > 604800 THEN GOTO 60 ELSE GOTO 70
+    60  LET timeinseconds = 604800
+    70  LET endBlockTime = startBlockTime + timeinseconds
+    80  RETURN endBlockTime
 End Function
 
 Function checkActive(listType String) Uint64
@@ -220,52 +231,44 @@ Function checkActive(listType String) Uint64
 End Function
 
 Function processHighestBidder() Uint64
-    10  dim tempCounter, highestBidAmt, highestBidIndex, currBidAmt as Uint64
-    20  dim highestbidaddr, currbidaddr as String
-    30  LET highestbidaddr = LOAD("owner")
-    40  LET tempCounter = LOAD("bidCount") + 1
-    100 IF EXISTS(ITOA(tempCounter) + "-bidAmt") == 1 THEN GOTO 110 ELSE GOTO 220
-    110 IF EXISTS(ITOA(tempCounter) + "-bidAddr") == 1 THEN GOTO 120 ELSE GOTO 220
-    120 LET currBidAmt = LOAD(ITOA(tempCounter) + "-bidAmt")
-    130 LET currbidaddr = LOAD(ITOA(tempCounter) + "-bidAddr")
-    140 IF currBidAmt > 0 THEN GOTO 150 ELSE GOTO 220
-    150 IF currbidaddr == "" THEN GOTO 220 ELSE GOTO 160
-    160 IF highestBidAmt < currBidAmt THEN GOTO 170 ELSE GOTO 220
-    170 LET highestBidIndex = tempCounter
-    180 LET highestBidAmt = currBidAmt
-    190 LET highestbidaddr = currbidaddr
-    220 LET tempCounter = tempCounter - 1
-    240 IF tempCounter != 0 THEN GOTO 100 ELSE GOTO 300
-    300 IF highestbidaddr != "" THEN GOTO 310 ELSE GOTO 460
-    310 SEND_ASSET_TO_ADDRESS(highestbidaddr, LOAD("scBalance"), SCID())
-    320 processDEROFinalPayment(highestBidAmt)
-    330 STORE(ITOA(highestBidIndex) + "-bidAddr", "")
-    340 STORE(ITOA(highestBidIndex) + "-bidAmt", 0)
-    350 transferOwnership(highestbidaddr)
+    10  dim bidAmt as Uint64
+    20  dim bidAddr as String
+    30  LET bidAddr = LOAD("owner")
+    100 IF EXISTS("currBidAmt") == 1 THEN GOTO 110 ELSE GOTO 310
+    110 IF EXISTS("currBidAddr") == 1 THEN GOTO 120 ELSE GOTO 310
+    120 IF LOAD("currBidAddr") != "" THEN GOTO 130 ELSE GOTO 310
+    130 IF LOAD("currBidAmt") > 0 THEN GOTO 140 ELSE GOTO 310
+    140 LET bidAddr = LOAD("currBidAddr")
+    150 LET bidAmt = LOAD("currBidAmt")
+    310 SEND_ASSET_TO_ADDRESS(bidAddr, LOAD("scBalance"), SCID())
+    320 processDEROFinalPayment(bidAmt)
+    350 transferOwnership(bidAddr)
     360 STORE("scBalance", 0)
-    370 STORE("previousAuctionPrice", highestBidAmt)
-    460 processDEROReturns(LOAD("bidCount"))
+    370 IF EXISTS(bidAddr + "-bidDate") == 1 THEN GOTO 380 ELSE GOTO 390
+    380 DELETE(bidAddr + "-bidDate")
+    390 DELETE("currBidAddr")
+    400 DELETE("currBidAmt")
+    410 IF bidAmt > 0 THEN GOTO 420 ELSE GOTO 600
+    420 STORE("previousAuctionPrice", bidAmt)
     600 resetVars(1)
     610 RETURN 0
 End Function
 
-Function processDEROReturns(tempCounter Uint64) Uint64
-    10  IF tempCounter > 0 THEN GOTO 20 ELSE GOTO 900
-    20  IF EXISTS(ITOA(tempCounter) + "-bidAddr") == 1 THEN GOTO 30 ELSE GOTO 830
-    30  IF EXISTS(ITOA(tempCounter) + "-bidAmt") == 1 THEN GOTO 40 ELSE GOTO 830
-    40  IF LOAD(ITOA(tempCounter) + "-bidAmt") > 0 THEN GOTO 50 ELSE GOTO 800
-    50  IF LOAD(ITOA(tempCounter) + "-bidAddr") != "" THEN GOTO 60 ELSE GOTO 800
-    60  SEND_DERO_TO_ADDRESS(LOAD(ITOA(tempCounter) + "-bidAddr"), LOAD(ITOA(tempCounter) + "-bidAmt"))
-    800 DELETE(LOAD(ITOA(tempCounter) + "-bidAddr") + "-bidDate")
-    810 DELETE(ITOA(tempCounter) + "-bidAddr")
-    820 DELETE(ITOA(tempCounter) + "-bidAmt")
-    830 LET tempCounter = tempCounter - 1
-    840 IF tempCounter != 0 THEN GOTO 10 ELSE GOTO 900
+Function outbidReturns() Uint64
+    20  IF EXISTS("currBidAddr") == 1 THEN GOTO 30 ELSE GOTO 900
+    30  IF EXISTS("currBidAmt") == 1 THEN GOTO 40 ELSE GOTO 900
+    40  IF LOAD("currBidAmt") > 0 THEN GOTO 50 ELSE GOTO 900
+    50  IF LOAD("currBidAddr") != "" THEN GOTO 60 ELSE GOTO 900
+    60  SEND_DERO_TO_ADDRESS(LOAD("currBidAddr"), LOAD("currBidAmt"))
+    800 DELETE(LOAD("currBidAddr") + "-bidDate")
+    810 DELETE("currBidAddr")
+    820 DELETE("currBidAmt")
     900 RETURN 0
 End Function
 
 Function processDEROFinalPayment(saleAmt Uint64) Uint64
     10  dim payoutAmt, royaltyPaymt, artificerPaymt, charityPaymt as Uint64
+    20  IF saleAmt == 0 THEN GOTO 200 ELSE GOTO 60
     60  IF LOAD("royalty") > 0 THEN GOTO 65 ELSE GOTO 80
     65  LET royaltyPaymt = LOAD("royalty") * saleAmt / 100
     66  IF royaltyPaymt > 0 THEN GOTO 70 ELSE GOTO 80

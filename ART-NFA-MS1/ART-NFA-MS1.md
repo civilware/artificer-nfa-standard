@@ -22,14 +22,16 @@ Example functionalities ART-NFA-MS1 provides:
 ## Functions
 
 ```go
-function ClaimOwnership() Uint64
-function Update(iconURL String, coverURL String, fileURL String, fileSignURL String, tags String) Uint64
-function Start(listType String, duration Uint64, startPrice Uint64, charityDonateAddr String, charityDonatePerc Uint64) Uint64
-function BuyItNow() Uint64
-function Bid() Uint64
-function CloseListing() Uint64
-function CancelListing() Uint64
+Function ClaimOwnership() Uint64
+Function Update(iconURL String, coverURL String, fileURL String, fileSignURL String, tags String) Uint64
+Function Start(listType String, duration Uint64, startPrice Uint64, charityDonateAddr String, charityDonatePerc Uint64) Uint64
+Function BuyItNow() Uint64
+Function Bid() Uint64
+Function CloseListing() Uint64
+Function CancelListing() Uint64
 ```
+
+* [Functions](ART-NFA-MS1-Functions.md)
 
 ## Initialization
 
@@ -56,15 +58,15 @@ Function InitializePrivate() Uint64
 End Function 
 ```
 
-## Template
+## Contract Template
 
-* [ART-NFA-MS1](./ART-NFA-MS1.bas)
+* [ART-NFA-MS1](ART-NFA-MS1.bas)
 
 ## Utilization
 
 It is in your best interest to always run a getgasestimate ahead of any direct curls below as well as use ringsize = 2. This will 1) reduce your errors and 2) ensure you are utilizing the proper amount for fees. Each portion below will be split with a getgasestimate example call first, and then the follow-up with the respective fees that were present in that exact scenario. It's up to you to modify the fees param to reflect the 'gasstorage' return of getgasestimate. Always use ringsize 2 to interact with the contract in order to not run the risk of unintended asset transfers.
 
-Future dApp(s) will make this process/interaction seamless, however in the event you want to build your own or interact manually you can use the below curl commands to step through it.
+Future dApp(s) will make this process/interaction seamless, however in the event you want to build your own or interact manually you can use the below curl commands to step through it. If you require some additional details for parameters etc. checkout the [Functions](ART-NFA-MS1-Functions.md) write-up.
 
 ### Install_SC
 ```
