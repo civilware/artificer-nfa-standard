@@ -62,6 +62,10 @@ End Function
 
 * [ART-NFA-MS1](ART-NFA-MS1.bas)
 
+## Changelog
+
+* [Changelog](Changelog.md)
+
 ## Utilization
 
 It is in your best interest to always run a getgasestimate ahead of any direct curls below as well as use ringsize = 2. This will 1) reduce your errors and 2) ensure you are utilizing the proper amount for fees. Each portion below will be split with a getgasestimate example call first, and then the follow-up with the respective fees that were present in that exact scenario. It's up to you to modify the fees param to reflect the 'gasstorage' return of getgasestimate. Always use ringsize 2 to interact with the contract in order to not run the risk of unintended asset transfers.
