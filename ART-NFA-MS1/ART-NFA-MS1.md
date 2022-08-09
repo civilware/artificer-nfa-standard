@@ -1,14 +1,33 @@
-# ART-NFA-MS1 - Artificer NFT Market Standard
+# ART-NFA-MS1 - Artificer NFT Market Standard <!-- omit in toc -->
 Copyright 2022 Civilware. All rights reserved.<br>
 dero1qy0khp9s9yw2h0eu20xmy9lth3zp5cacmx3rwt6k45l568d2mmcf6qgcsevzx
 
-## Introduction
+## Introduction <!-- omit in toc -->
 
-### What is ART-NFA-MS1
+### What is ART-NFA-MS1<!-- omit in toc -->
 
 The ART-NFA-MS1 (Artificer NFT Market Standard) introduces a standard for Non-Fungible Assets with a built-in trustless marketplace. An ART-NFA-MS1 Asset can be exchanged within the contract through two methods, auction and sale. Sales are started with a defined price and allows for BuyItNow() actions to be taken to sell the asset. Auctions are started with a defined bid price which will increase as more bids are placed. A ART-NFA-MS1 Asset can also be exchanged privately through native DERO transactions. Assets only ever reside within the balance of the contract in the event of a sale or auction.
 
-## BODY
+## Table of Contents <!-- omit in toc -->
+- [Functionality](#functionality)
+- [Functions](#functions)
+- [Initialization](#initialization)
+- [Contract Template](#contract-template)
+- [Minting](#minting)
+- [Changelog](#changelog)
+- [Utilization](#utilization)
+  - [Install_SC](#install_sc)
+  - [ClaimOwnership()](#claimownership)
+  - [Update()](#update)
+  - [Start()](#start)
+    - [Sale](#sale)
+    - [Auction](#auction)
+  - [BuyItNow()](#buyitnow)
+  - [Bid()](#bid)
+  - [CloseListing()](#closelisting)
+  - [CancelListing()](#cancellisting)
+
+## Functionality
 
 Example functionalities ART-NFA-MS1 provides:
 
@@ -40,16 +59,16 @@ When deploying the standard with Artificer (coming soon), metadata values are in
 ```go
 Function InitializePrivate() Uint64
     ...
-    300 STORE("artificerFee", 0)    // This value will either be 0 or 1 defined by the creator, but defaults to 0. This is a fee donation back to the DERO Foundation.
-    310 STORE("royalty", 0)   // This defines the royalty that is paid back to the original creator of the asset. It can range between 0 and 100, taking into account remaining below 100 with artificerFee + royalty.
+    300 STORE("artificerFee", 0)    // This is a donation back to the Civilware developers. It can range between 0 and 100, taking into account remaining below 100 with artificerFee + royalty. It is 0 by default.
+    310 STORE("royalty", 0)   // This defines the royalty that is paid back to the original creator of the asset. It can range between 0 and 100, taking into account remaining below 100 with artificerFee + royalty. It is 0 by default.
     320 STORE("ownerCanUpdate", 0)  // This defines whether only a creator (0) can update tags/urls or an owner and/or a creator (1) can update tags/urls.
     330 STORE("nameHdr", "<nameHdr>") // This defines the name of the NFA, following the headers variable standard.
     340 STORE("descrHdr", "<descrHdr>") // This defines the description of the NFA, following the headers variable standard.
     350 STORE("typeHdr", "<typeHdr>") // This defines the type of the NFA, following the headers variable standard.
     360 STORE("iconURLHdr", "<iconURLHdr>") // This defines the url for the icon representing the NFA, following the headers variable standard. This should be of size 100x100.
-    370 STORE("tagsHdr", "<tagsHdr>") // This defines the tags used in reference to this asset.
-    400 STORE("fileCheckC", "<fileCheckC>") // This defines the file signature 'C' header within the .sign file generated from the owner.
-    410 STORE("fileCheckS", "<fileCheckS>") // This defines the file signature 'S' header within the .sign file generated from the owner.
+    370 STORE("tagsHdr", "<tagsHdr>") // This defines the tags used in reference to this asset, following the headers variable standard.
+    400 STORE("fileCheckC", "<fileCheckC>") // This defines the file signature 'C' header within the .sign file generated from the original asset by the owner.
+    410 STORE("fileCheckS", "<fileCheckS>") // This defines the file signature 'S' header within the .sign file generated from the original asset by the owner.
     420 STORE("fileURL", "<fileURL>") // This defines the url for the file which this NFA is minting. This can be hosted anywhere the creator desires and is updateable by creator and/or owner depending on setting of ownerCanUpdate (0/1).
     430 STORE("fileSignURL", "<fileSignURL>") // This defines the url for the file signature which this NFA is minting. This signature is generated through the filesign capabilities of the DERO wallet. fileCheckC and fileCheckS are populated from the original filesign and capable of being re-validated against this data for future dApp integrations.
     440 STORE("coverURL", "<coverURL>") // This defines the url for the cover representing the NFA. This is generally a "smaller" version of the original or some variation that can be loaded quickly, but slightly larger than the icon url.
@@ -59,11 +78,12 @@ End Function
 ```
 
 ## Contract Template
-
 * [ART-NFA-MS1](ART-NFA-MS1.bas)
 
-## Changelog
+## Minting
+* [Minting](ART-NFA-MS1-Minting.md)
 
+## Changelog
 * [Changelog](Changelog.md)
 
 ## Utilization

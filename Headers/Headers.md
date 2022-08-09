@@ -7,7 +7,6 @@ dero1qy0khp9s9yw2h0eu20xmy9lth3zp5cacmx3rwt6k45l568d2mmcf6qgcsevzx
 Within the Artificer NFA standards there is a subset of headers which are included as variables in each contract. These headers are intended to be used by dApps and other query applications in order to pull down important information in regards to the given asset for indexing and other operations.
 
 ### Headers
-
 * nameHdr
   * Name of the asset.
 * descrHdr
