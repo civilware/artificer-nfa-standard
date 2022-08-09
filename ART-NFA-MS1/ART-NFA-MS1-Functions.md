@@ -58,7 +58,9 @@ dero1qy0khp9s9yw2h0eu20xmy9lth3zp5cacmx3rwt6k45l568d2mmcf6qgcsevzx
 #### Asset/DERO Inputs <!-- omit in toc -->
 * DERO amount equal or greater to currBidPrice
 #### Details <!-- omit in toc -->
-* Used to bid on an on-going auction listing type, assuming the supplied DERO amount is equal or greater to currBidPrice. Bids are refunded after being out-bid and the highest bidder at the end will win the auction. Auctions are closed out either by CloseListing() call by the owner or through a Bid() being placed after the end time is reached. If a bid is placed within the last 15 minutes of a bid window, the end window will be extended to 15 minutes.
+* Used to bid on an on-going auction listing type, assuming the supplied DERO amount is equal or greater to currBidPrice. Bids are refunded after being out-bid and the highest bidder at the end will win the auction.
+  * **Please note:** currBidPrice is increased by either 10% or 0.1 DERO (depending which is lesser) after a bid is successfully placed.
+* Auctions are closed out either by CloseListing() call by the owner or through a Bid() being placed after the end time is reached. If a bid is placed within the last 15 minutes of a bid window, the end window will be extended to 15 minutes.
 
 ## Function CloseListing() Uint64
 #### Parameters <!-- omit in toc -->
