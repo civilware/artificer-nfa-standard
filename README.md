@@ -6,12 +6,10 @@ Forge non-fungible assets with a built-in trustless and decentralized marketplac
 
 See the following standard for more information:
 
-* [ART-NFA-MS1](/ART-NFA-MS1/ART-NFA-MS1.md)
+* [ART-NFA-MS1](/ART-NFA-MS1/README.md)
 
 ### Supporting Standards
 
 Headers can be used by dapps to gather and display metadata for any asset using the following standard:
 
-* [Headers](/Headers/Headers.md)
-
-
+* [Headers](/Headers/README.md)

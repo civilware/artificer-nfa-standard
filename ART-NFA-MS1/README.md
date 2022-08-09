@@ -54,7 +54,7 @@ Function CancelListing() Uint64
 
 ## Initialization
 
-When deploying the standard with Artificer (coming soon), metadata values are input for you and no action required. If you are deploying this standard manually, update the metadata values outlined below. For header values you can refer to the [Headers](../Headers/Headers.md) standard.
+When deploying the standard with Artificer (coming soon), metadata values are input for you and no action required. If you are deploying this standard manually, update the metadata values outlined below. For header values you can refer to the [Headers](../Headers/README.md) standard.
 
 ```go
 Function InitializePrivate() Uint64

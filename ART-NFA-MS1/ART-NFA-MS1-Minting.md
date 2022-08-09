@@ -54,19 +54,19 @@ dero1qy0khp9s9yw2h0eu20xmy9lth3zp5cacmx3rwt6k45l568d2mmcf6qgcsevzx
 * A Uint64 value that defines whether only a creator (0) can update tags/urls or an owner and/or a creator (1) can update tags/urls.
 
 #### nameHdr
-* A string value defining the name of the NFA, following the [headers](../Headers/Headers.md#headers) variable standard.
+* A string value defining the name of the NFA, following the [headers](../Headers/README.md#headers) variable standard.
 
 #### descrHdr
-* A string value defining the description of the NFA, following the [headers](../Headers/Headers.md#headers) variable standard.
+* A string value defining the description of the NFA, following the [headers](../Headers/README.md#headers) variable standard.
 
 #### typeHdr
-* A string value defining the type of the NFA, following the [headers](../Headers/Headers.md#headers) variable standard.
+* A string value defining the type of the NFA, following the [headers](../Headers/README.md#headers) variable standard.
 
 #### iconURLHdr
-* A string value defining the url for the icon representing the NFA, following the [headers](../Headers/Headers.md#headers) variable standard. This should be of size 100x100.
+* A string value defining the url for the icon representing the NFA, following the [headers](../Headers/README.md#headers) variable standard. This should be of size 100x100.
 
 #### tagsHdr
-* A string value defining the tags used in reference to this asset, following the [headers](../Headers/Headers.md#headers) variable standard.
+* A string value defining the tags used in reference to this asset, following the [headers](../Headers/README.md#headers) variable standard.
 
 #### fileCheckC
 * A string value defining the file signature 'C' header within the .sign file generated from the original asset by the owner. Use the filesign function and supply the original file prior to deploying this asset.
