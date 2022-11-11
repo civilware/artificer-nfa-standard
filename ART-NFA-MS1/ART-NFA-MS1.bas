@@ -156,7 +156,7 @@ Function Bid() Uint64
     130 STORE("currBidAmt", bidAmt)
     140 STORE(SIGNER() + "-bidDate", BLOCK_TIMESTAMP())
     150 STORE("bidCount", LOAD("bidCount") + 1)
-    170 IF LOAD("endBlockTime") - 900 <= BLOCK_TIMESTAMP() THEN GOTO 150 ELSE GOTO 160
+    170 IF LOAD("endBlockTime") - 900 <= BLOCK_TIMESTAMP() THEN GOTO 180 ELSE GOTO 190
     180 STORE("endBlockTime", BLOCK_TIMESTAMP() + 900)
     190 RETURN 0
     500 IF activeFlag == 999 THEN GOTO 920 ELSE GOTO 510
