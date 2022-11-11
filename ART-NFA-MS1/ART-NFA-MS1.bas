@@ -40,7 +40,7 @@ Function init() Uint64
     150 STORE("charityDonatePerc", 0)
     160 STORE("startPrice", 0)
     170 STORE("currBidPrice", 0)
-    180 STORE("version", "1.1.0")
+    180 STORE("version", "1.1.1")
     500 IF LOAD("charityDonatePerc") + LOAD("artificerFee") + LOAD("royalty") > 100 THEN GOTO 999
     600 SEND_ASSET_TO_ADDRESS(SIGNER(), 1, SCID())
     610 RETURN 0

@@ -1,5 +1,9 @@
 ### Artificer NFA Standard Changelog
 
+###1.1.1
+
+* Fixed a missed GOTO reference update which caused broken component when utilizing Bid(). See [merge](https://github.com/civilware/artificer-nfa-standard/pull/1)
+
 ###1.1.0
 
 * Listings now have an explicit cap end duration of 7 days
